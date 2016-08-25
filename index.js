@@ -52,14 +52,46 @@ Mpcpp.connect = (opts) => {
 // formatters
 
 function formatStatus (s) {
+	s.paused = s.state !== 'play'
+	// bool
 	Mpcpp.COMMANDS.OPTIONS_TOGGLES.forEach((b) => {
 		s[b] = s[b] === '1'
+	});
+
+	// number
+	[
+		'volume',
+		'playlist',
+		'playlistlength',
+		'song',
+		'songid',
+		'time',
+		'elapsed',
+		'bitrate',
+		'nextsong',
+		'nextsongid',
+		'xfade',
+		'mixrampdb'
+	]
+	.forEach((f) => {
+		s[f] = parseInt(s[f])
 	})
-	s.paused = s.state !== 'play'
+
+	// case
+	s.playlistLength = s.playlistlength
+	delete s.playlistlength
+	s.songId = s.songid
+	delete s.songid
+	s.nextSong = s.nextsong
+	delete s.nextsong
+	s.nextSongId = s.nextsongid
+	delete s.nextsongid
+
 	return s
 }
 
 function formatSong (s) {
+	// case
 	[
 		'Album',
 		'Artist',
@@ -73,8 +105,15 @@ function formatSong (s) {
 	.forEach((f) => {
 		s[f.toLowerCase()] = s[f]
 		delete s[f]
-	});
+	})
+	s.lastModified = s['Last-Modified']
+	delete s['Last-Modified']
+	if (s.AlbumArtist) {
+		s.albumArtist = s.AlbumArtist
+		delete s.AlbumArtist
+	}
 
+	// number
 	[
 		'time',
 		'id',
@@ -85,12 +124,7 @@ function formatSong (s) {
 		// use of parseInt to extract only the year from dates
 		s[f] = parseInt(s[f])
 	})
-	s.lastModified = s['Last-Modified']
-	delete s['Last-Modified']
-	if (s.AlbumArtist) {
-		s.albumArtist = s.AlbumArtist
-		delete s.AlbumArtist
-	}
+
 	return s
 }
 
