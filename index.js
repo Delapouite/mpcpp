@@ -73,9 +73,24 @@ function formatSong (s) {
 	.forEach((f) => {
 		s[f.toLowerCase()] = s[f]
 		delete s[f]
+	});
+
+	[
+		'time',
+		'id',
+		'pos',
+		'date'
+	]
+	.forEach((f) => {
+		// use of parseInt to extract only the year from dates
+		s[f] = parseInt(s[f])
 	})
 	s.lastModified = s['Last-Modified']
 	delete s['Last-Modified']
+	if (s.AlbumArtist) {
+		s.albumArtist = s.AlbumArtist
+		delete s.AlbumArtist
+	}
 	return s
 }
 
