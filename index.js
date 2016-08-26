@@ -48,6 +48,11 @@ Mpcpp.connect = (opts) => {
 		}
 	})
 
+	m.toggle = () => {
+		m.state.status.paused ? m.play() : m.pause()
+	}
+	Mpcpp.COMMANDS.PLAYBACK.push('toggle')
+
 	Mpcpp.COMMANDS.OPTIONS_TOGGLES.forEach((cmd) => {
 		m[cmd] = (b, cb) => {
 			const n = b ? 1 : 0
