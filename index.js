@@ -3,7 +3,7 @@ const mpd = require('mpd')
 const Mpcpp = Object.create(mpd)
 Mpcpp.COMMANDS = {
 	DB: ['currentSong', 'status'],
-	PLAYBACK: ['play', 'pause', 'stop', 'next', 'prev'],
+	PLAYBACK: ['play', 'pause', 'stop', 'next', 'previous'],
 	OPTIONS_TOGGLES: ['consume', 'random', 'repeat', 'single']
 }
 
