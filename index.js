@@ -10,6 +10,11 @@ Mpcpp.COMMANDS = {
 Mpcpp.connect = (opts) => {
 	const m = Object.create(mpd.connect(opts))
 
+	m.state = {
+		status: {},
+		currentSong: {}
+	}
+
 	// getters
 
 	m.get = (cmd, cb) => {
@@ -20,13 +25,17 @@ Mpcpp.connect = (opts) => {
 
 	m.status = (cb) => {
 		m.get('status', (err, res) => {
-			cb(err, formatStatus(res))
+			const status = formatStatus(res)
+			m.state.status = status
+			cb(err, status)
 		})
 	}
 
 	m.currentSong = (cb) => {
 		m.get('currentsong', (err, res) => {
-			cb(err, formatSong(res))
+			const currentSong = formatSong(res)
+			m.state.currentSong = currentSong
+			cb(err, currentSong)
 		})
 	}
 
