@@ -1,3 +1,4 @@
+const values = require('object.values')
 const mpd = require('mpd')
 
 const Mpcpp = Object.create(mpd)
@@ -36,6 +37,29 @@ Mpcpp.connect = (opts) => {
 			const currentSong = formatSong(res)
 			m.state.currentSong = currentSong
 			cb(err, currentSong)
+		})
+	}
+
+	m.albums = (artist, cb) => {
+		m.sendCommand(Mpcpp.cmd('playlistfind', ['artist', artist]), (err, res) => {
+			if (err) return cb(err)
+
+			const songs = Mpcpp.parseArrayMessage(res).map(formatSong)
+			const albums = songs.reduce((acc, s) => {
+				let album = acc[s.album]
+				if (!album) {
+					album = {
+						title: s.album,
+						date: s.date,
+						songs: []
+					}
+					acc[s.album] = album
+				}
+				album.songs.push(s)
+				return acc
+			}, {})
+
+			cb(null, values(albums))
 		})
 	}
 
