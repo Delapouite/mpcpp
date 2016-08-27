@@ -79,7 +79,10 @@ Mpcpp.connect = (opts) => {
 
 	Mpcpp.COMMANDS.OPTIONS_TOGGLES.forEach((cmd) => {
 		m[cmd] = (b, cb) => {
-			const n = b ? 1 : 0
+			let n
+			if (b === 0) n = 1
+			else if (b == 1) n = 0
+			else n = m.state.status.random ? 0 : 1
 			m.sendCommand(Mpcpp.cmd(cmd, [n]), cb)
 		}
 	})
