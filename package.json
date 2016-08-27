@@ -1,6 +1,6 @@
 {
   "name": "mpcpp",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Interact with your MPD server from node.js",
   "main": "index.js",
   "scripts": {
