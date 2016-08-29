@@ -77,6 +77,10 @@ Mpcpp.connect = (opts) => {
 	}
 	Mpcpp.COMMANDS.PLAYBACK.push('toggle')
 
+	m.playId = (id, cb) => {
+		m.sendCommand(Mpcpp.cmd('playid', [id]), cb)
+	}
+
 	Mpcpp.COMMANDS.OPTIONS_TOGGLES.forEach((cmd) => {
 		m[cmd] = (b, cb) => {
 			let n
