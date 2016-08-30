@@ -29,4 +29,9 @@ client.on('system-player', () => {
 		if (err) throw err
 		console.log('albums', albums)
 	})
+
+	client.find(['artist', 'Kula Shaker', 'date', '1996'], (err, songs) => {
+		if (err) throw err
+		console.log('find', songs)
+	})
 })
