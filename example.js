@@ -6,23 +6,28 @@ const client = Mpcpp.connect({
 })
 
 client.on('ready', () => {
-	console.log("ready")
+	console.log('ready')
 })
 
 client.on('system', (name) => {
-	console.log("system update", name)
+	console.log('system update', name)
 })
 
 client.on('system-player', () => {
 
 	client.status((err, status) => {
 		if (err) throw err
-		console.log("status", status)
+		console.log('status', status)
 	})
 
 	client.currentSong((err, song) => {
 		if (err) throw err
-		console.log("song", song)
+		console.log('current song', song)
+
+		client.currentAlbum((err, album) => {
+			if (err) throw err
+			console.log('current album', album)
+		})
 	})
 
 	client.albums('Kula Shaker', (err, albums) => {

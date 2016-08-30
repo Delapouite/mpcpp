@@ -49,6 +49,23 @@ Mpcpp.connect = (opts) => {
 		})
 	}
 
+	m.currentAlbum = (cb) => {
+		const { album, artist } = m.state.currentSong
+		if (!album || !artist) return cb(null, {})
+
+		m.find(['album', album, 'artist', artist], (err, songs) => {
+			if (!songs || !songs.length) cb(null, {})
+
+			const album = {
+				title: songs[0].album,
+				date: songs[0].date,
+				songs
+			}
+
+			cb(null, album)
+		})
+	}
+
 	m.albums = (artist, cb) => {
 		m.find(['artist', artist], (err, songs) => {
 			if (err) return cb(err)
