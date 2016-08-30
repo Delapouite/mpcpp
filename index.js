@@ -24,6 +24,15 @@ Mpcpp.connect = (opts) => {
 		})
 	}
 
+	m.find = (query, cb) => {
+		m.sendCommand(Mpcpp.cmd('playlistfind', query), (err, res) => {
+			if (err) return cb(err)
+
+			const songs = Mpcpp.parseArrayMessage(res).map(formatSong)
+			cb(null, songs)
+		})
+	}
+
 	m.status = (cb) => {
 		m.get('status', (err, res) => {
 			const status = formatStatus(res)
@@ -41,10 +50,9 @@ Mpcpp.connect = (opts) => {
 	}
 
 	m.albums = (artist, cb) => {
-		m.sendCommand(Mpcpp.cmd('playlistfind', ['artist', artist]), (err, res) => {
+		m.find(['artist', artist], (err, songs) => {
 			if (err) return cb(err)
 
-			const songs = Mpcpp.parseArrayMessage(res).map(formatSong)
 			const albums = songs.reduce((acc, s) => {
 				let album = acc[s.album]
 				if (!album) {
