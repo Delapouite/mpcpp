@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "mpd"
+    "mpd",
+    "music",
+    "id3"
   ],
   "author": "Delapouite <delapouite@gmail.com> (http://delapouite.com)",
   "repository": {
