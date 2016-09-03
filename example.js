@@ -30,9 +30,14 @@ client.on('system-player', () => {
 		})
 	})
 
-	client.albums('Kula Shaker', (err, albums) => {
+	client.artist('Kula Shaker', (err, albums) => {
 		if (err) throw err
-		console.log('albums', albums)
+		console.log('artist', albums)
+	})
+
+	client.date('2016', (err, albums) => {
+		if (err) throw err
+		console.log('date', albums)
 	})
 
 	client.find(['artist', 'Kula Shaker', 'date', '1996'], (err, songs) => {

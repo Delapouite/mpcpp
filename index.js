@@ -66,25 +66,30 @@ Mpcpp.connect = (opts) => {
 		})
 	}
 
+	// TODO deprecate in v2
 	m.albums = (artist, cb) => {
 		m.find(['artist', artist], (err, songs) => {
 			if (err) return cb(err)
 
-			const albums = songs.reduce((acc, s) => {
-				let album = acc[s.album]
-				if (!album) {
-					album = {
-						title: s.album,
-						date: s.date,
-						songs: []
-					}
-					acc[s.album] = album
-				}
-				album.songs.push(s)
-				return acc
-			}, {})
+			cb(null, formatAlbums(songs))
+		})
+	}
 
-			cb(null, values(albums))
+	// all albums for a given artist
+	m.artist = (artist, cb) => {
+		m.find(['artist', artist], (err, songs) => {
+			if (err) return cb(err)
+
+			cb(null, formatAlbums(songs))
+		})
+	}
+
+	// all albums for a given date
+	m.date = (date, cb) => {
+		m.find(['date', date], (err, songs) => {
+			if (err) return cb(err)
+
+			cb(null, formatAlbums(songs))
 		})
 	}
 
@@ -196,6 +201,24 @@ function formatSong (s) {
 	})
 
 	return s
+}
+
+function formatAlbums (songs) {
+	const albums = songs.reduce((acc, s) => {
+		let album = acc[s.album]
+			if (!album) {
+				album = {
+					title: s.album,
+					date: s.date,
+					artist: s.artist,
+					songs: []
+				}
+				acc[s.album] = album
+			}
+		album.songs.push(s)
+		return acc
+	}, {})
+	return values(albums)
 }
 
 module.exports = Mpcpp
