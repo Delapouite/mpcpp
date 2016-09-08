@@ -40,8 +40,15 @@ client.on('system-player', () => {
 		console.log('date', albums)
 	})
 
+	// exact match
 	client.find(['artist', 'Kula Shaker', 'date', '1996'], (err, songs) => {
 		if (err) throw err
 		console.log('find', songs)
+	})
+
+	// insensitive partial match
+	client.search(['artist', 'kula', 'date', '1996'], (err, songs) => {
+		if (err) throw err
+		console.log('search', songs)
 	})
 })

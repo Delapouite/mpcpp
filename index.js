@@ -24,8 +24,19 @@ Mpcpp.connect = (opts) => {
 		})
 	}
 
+	// strict match
 	m.find = (query, cb) => {
 		m.sendCommand(Mpcpp.cmd('playlistfind', query), (err, res) => {
+			if (err) return cb(err)
+
+			const songs = Mpcpp.parseArrayMessage(res).map(formatSong)
+			cb(null, songs)
+		})
+	}
+
+	// insensitive partial match
+	m.search = (query, cb) => {
+		m.sendCommand(Mpcpp.cmd('playlistsearch', query), (err, res) => {
 			if (err) return cb(err)
 
 			const songs = Mpcpp.parseArrayMessage(res).map(formatSong)
