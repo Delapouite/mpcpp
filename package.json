@@ -22,7 +22,6 @@
   "homepage": "https://github.com/delapouite/mpcpp",
   "license": "ISC",
   "dependencies": {
-    "mpd": "^1.3.0",
-    "object.values": "^1.0.3"
+    "mpd": "^1.3.0"
   }
 }

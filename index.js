@@ -1,10 +1,9 @@
-const values = require('object.values')
 const mpd = require('mpd')
 
 const Mpcpp = Object.create(mpd)
 Mpcpp.COMMANDS = {
 	DB: ['currentSong', 'status'],
-	PLAYBACK: ['play', 'pause', 'stop', 'next', 'previous'],
+	PLAYBACK: ['play', 'pause', 'stop', 'next', 'previous', 'clear'],
 	OPTIONS_TOGGLES: ['consume', 'random', 'repeat', 'single']
 }
 
@@ -104,6 +103,11 @@ Mpcpp.connect = (opts) => {
 		})
 	}
 
+	// setters
+	m.add = (uri, cb) => {
+		m.sendCommand(Mpcpp.cmd('add', [uri]), cb)
+	}
+
 	// shortcuts
 
 	Mpcpp.COMMANDS.PLAYBACK
@@ -120,6 +124,23 @@ Mpcpp.connect = (opts) => {
 
 	m.playId = (id, cb) => {
 		m.sendCommand(Mpcpp.cmd('playid', [id]), cb)
+	}
+
+	function clearAndPlay (cb) {
+		return (err, albums) => {
+			if (err) return cb(err)
+			m.clear()
+			albums.map(a => a.songs.forEach(s => m.add(s.file)))
+			m.play()
+		}
+	}
+
+	m.playArtist = (artist, cb) => {
+		m.artist(artist, clearAndPlay(cb))
+	}
+
+	m.playDate = (date, cb) => {
+		m.date(date, clearAndPlay(cb))
 	}
 
 	Mpcpp.COMMANDS.OPTIONS_TOGGLES.forEach((cmd) => {
@@ -217,19 +238,19 @@ function formatSong (s) {
 function formatAlbums (songs) {
 	const albums = songs.reduce((acc, s) => {
 		let album = acc[s.album]
-			if (!album) {
-				album = {
-					title: s.album,
-					date: s.date,
-					artist: s.artist,
-					songs: []
-				}
-				acc[s.album] = album
+		if (!album) {
+			album = {
+				title: s.album,
+				date: s.date,
+				artist: s.artist,
+				songs: []
 			}
+			acc[s.album] = album
+		}
 		album.songs.push(s)
 		return acc
 	}, {})
-	return values(albums)
+	return Object.values(albums)
 }
 
 module.exports = Mpcpp
