@@ -103,6 +103,24 @@ Mpcpp.connect = (opts) => {
 		})
 	}
 
+	m.playlists = (cb) => {
+		m.sendCommand('listplaylists', (err, res) => {
+			if (err) return cb(err)
+
+			const playlists = Mpcpp.parseArrayMessage(res).map(p => p.playlist)
+			cb(null, playlists)
+		})
+	}
+
+	m.loadPlaylist = (name, cb) => {
+		m.clear()
+		m.sendCommand(Mpcpp.cmd('load', [name]), (err) => {
+			if (err) return cb(err)
+
+			m.play()
+		})
+	}
+
 	// setters
 	m.add = (uri, cb) => {
 		m.sendCommand(Mpcpp.cmd('add', [uri]), cb)
